@@ -209,7 +209,7 @@ public class CYWebServiceLoader extends AsyncTaskLoader<CYWebServiceLoader.RestR
 	        KeyStore trustStore = KeyStore.getInstance(KeyStore.getDefaultType());
 	        trustStore.load(null, null);
 
-	        SSLSocketFactory sf = new PMSSLSocketFactory(trustStore);
+	        SSLSocketFactory sf = new CYSSLSocketFactory(trustStore);
 	        sf.setHostnameVerifier(SSLSocketFactory.ALLOW_ALL_HOSTNAME_VERIFIER);
 
 	        HttpParams params = new BasicHttpParams();
