@@ -23,7 +23,8 @@ import com.cymobile.placelocator.R;
 public class HomeActivity extends Activity {
 	
 	private final static String TAG = "HomeActivity";
-	private final static String _getPlaceLatitudeURL = "http://maps.googleapis.com/maps/api/geocode/json?address={address},IL, US&sensor=false";// "http://gaminggeo.com/getPlace.php?longitude={longitude}&latitude=37.46454";
+	private final static String _getPlaceLatitudeURL = "http://maps.googleapis.com/maps/api/geocode/json?address={address},IL, US&sensor=false";
+	private final static String _getPlaceListURL = "http://gaminggeo.com/getPlace.php?longitude={longitude}&latitude={latitude}";
 	private double _longitude;
 	private double _latitude;
 	
@@ -32,7 +33,7 @@ public class HomeActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
-		getPlaceList();
+		getPlaceLocation();
 	}
 
 	@Override
@@ -43,6 +44,33 @@ public class HomeActivity extends Activity {
 	}
 	
 	private void getPlaceList(){
+		AsyncTask<Void, Integer, Boolean> task = new AsyncTask<Void, Integer, Boolean>(){
+
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				try{
+					String request = _getPlaceListURL;
+					request = request.replace("{longitude}", Double.toString(_longitude));
+					request = request.replace("{latitude}", Double.toString(_latitude));
+					request = request.replaceAll(" ", "%20");
+					JSONObject json = getJSONFromURL(request);
+					int resultNumber = json.getInt("result");
+					if(resultNumber > 0){
+						
+					}
+					
+				}catch(Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+		};
+		task.execute();
+	}
+	
+	private void getPlaceLocation(){
 		AsyncTask<Void, Integer, Boolean> task = new AsyncTask<Void, Integer, Boolean>(){
 
 			@Override
@@ -59,7 +87,7 @@ public class HomeActivity extends Activity {
 						JSONObject geometryResult = resultArray.getJSONObject(0).getJSONObject("geometry");
 						_latitude = geometryResult.getJSONObject("location").getDouble("lat");
 						_longitude = geometryResult.getJSONObject("location").getDouble("lng");
-						
+						getPlaceList();
 					}
 					
 				}catch(Exception e) {
