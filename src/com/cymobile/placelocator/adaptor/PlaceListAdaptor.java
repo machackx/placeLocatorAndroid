@@ -11,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.cymobile.placelocator.R;
 import com.cymobile.placelocator.model.CYPlace;
 
 public class PlaceListAdaptor extends BaseAdapter{
@@ -52,7 +53,11 @@ public class PlaceListAdaptor extends BaseAdapter{
 		
 		if (convertView != null) {
 			viewHolder = new ViewHolder();
-			convertView = layoutInflator.inflate(resource, root).
+			convertView = layoutInflator.inflate(R.layout.placelistview, null);
+			viewHolder.placeNameTextView = (TextView) convertView.findViewById(R.id.place_name);
+			viewHolder.addressTextView = (TextView) convertView.findViewById(R.id.place_address);
+			viewHolder.distanceTextView = (TextView) convertView.findViewById(R.id.place_distance);
+			
 		}
 		return null;
 	}
