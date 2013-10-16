@@ -1,0 +1,68 @@
+{
+   "results" : [
+      {
+         "address_components" : [
+            {
+               "long_name" : "Freeburg",
+               "short_name" : "Freeburg",
+               "types" : [ "locality", "political" ]
+            },
+            {
+               "long_name" : "Freeburg",
+               "short_name" : "Freeburg",
+               "types" : [ "administrative_area_level_3", "political" ]
+            },
+            {
+               "long_name" : "St. Clair",
+               "short_name" : "St Clair",
+               "types" : [ "administrative_area_level_2", "political" ]
+            },
+            {
+               "long_name" : "Illinois",
+               "short_name" : "IL",
+               "types" : [ "administrative_area_level_1", "political" ]
+            },
+            {
+               "long_name" : "United States",
+               "short_name" : "US",
+               "types" : [ "country", "political" ]
+            },
+            {
+               "long_name" : "62243",
+               "short_name" : "62243",
+               "types" : [ "postal_code" ]
+            }
+         ],
+         "formatted_address" : "Freeburg, IL 62243, USA",
+         "geometry" : {
+            "bounds" : {
+               "northeast" : {
+                  "lat" : 38.450381,
+                  "lng" : -89.8857249
+               },
+               "southwest" : {
+                  "lat" : 38.40254789999999,
+                  "lng" : -89.950587
+               }
+            },
+            "location" : {
+               "lat" : 38.4275499,
+               "lng" : -89.913714
+            },
+            "location_type" : "APPROXIMATE",
+            "viewport" : {
+               "northeast" : {
+                  "lat" : 38.450381,
+                  "lng" : -89.8857249
+               },
+               "southwest" : {
+                  "lat" : 38.40254789999999,
+                  "lng" : -89.950587
+               }
+            }
+         },
+         "types" : [ "locality", "political" ]
+      }
+   ],
+   "status" : "OK"
+}

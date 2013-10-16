@@ -5,7 +5,7 @@
     tools:context=".HomeActivity" >
 
     <ListView
-        android:id="@+id/lv_guidetv_maintenant"
+        android:id="@+id/placeList"
         android:layout_width="fill_parent"
         android:layout_height="match_parent"
         android:divider="@drawable/line"

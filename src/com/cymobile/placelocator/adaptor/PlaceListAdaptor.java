@@ -19,12 +19,13 @@ public class PlaceListAdaptor extends BaseAdapter{
 	ArrayList<CYPlace> _placeList;
 	LayoutInflater _layoutInflator;
 	Context _context;
-	
-	
+		
 	public PlaceListAdaptor(Context context, LayoutInflater layoutInflator, ArrayList<CYPlace> placeList){
 		_context = context;
 		_layoutInflator = layoutInflator;
 		_placeList = placeList;
+		
+		
 	}
 
 	@Override
@@ -51,15 +52,29 @@ public class PlaceListAdaptor extends BaseAdapter{
 		ViewHolder viewHolder;
 		LayoutInflater layoutInflator = LayoutInflater.from(_context);
 		
-		if (convertView != null) {
+		if (convertView == null) {
 			viewHolder = new ViewHolder();
 			convertView = layoutInflator.inflate(R.layout.placelistview, null);
 			viewHolder.placeNameTextView = (TextView) convertView.findViewById(R.id.place_name);
 			viewHolder.addressTextView = (TextView) convertView.findViewById(R.id.place_address);
 			viewHolder.distanceTextView = (TextView) convertView.findViewById(R.id.place_distance);
+			viewHolder.ratingImageView = (ImageView) convertView.findViewById(R.id.place_rating);
+			
+			convertView.setTag(viewHolder);
+		} else {
+			viewHolder = (ViewHolder) convertView.getTag();
+		}
+		
+		if (_placeList.get(position) != null) {
+			CYPlace aPlace = _placeList.get(position);
+			viewHolder.placeNameTextView.setText(aPlace.getPlaceName());
+			viewHolder.addressTextView.setText(aPlace.getPlaceAddress());
+			float distance =  Float.valueOf(aPlace.getDistance());
+			viewHolder.distanceTextView.setText(String.format("%.2f", distance) + "M");
 			
 		}
-		return null;
+		
+		return convertView;
 	}
 	
 	public static class ViewHolder {
