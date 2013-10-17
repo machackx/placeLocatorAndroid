@@ -16,17 +16,15 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.LinearLayout;
-import android.widget.LinearLayout.LayoutParams;
 import android.widget.ListView;
 
 import com.cymobile.placelocator.R;
@@ -56,6 +54,10 @@ public class HomeActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
 				CYPlace selectedPlace = placeList.get(position);
 				Log.w(TAG, selectedPlace.getPlaceName());
+				
+				Intent myIntent = new Intent(HomeActivity.this, PlaceMapActivity.class);
+				myIntent.putExtra("CYPlace", placeList.get(position));
+				startActivity(myIntent);	
 			}
 		});
 		

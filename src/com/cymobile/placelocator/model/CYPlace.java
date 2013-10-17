@@ -1,7 +1,11 @@
 package com.cymobile.placelocator.model;
 
-public class CYPlace {
+import java.io.Serializable;
 
+public class CYPlace implements Serializable{
+	
+	private static final long serialVersionUID = 12324133L;
+	
 	private String placeId;
 	private String placeName;
 	private String placeAddress;
