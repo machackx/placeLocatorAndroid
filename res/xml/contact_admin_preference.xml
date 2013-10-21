@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+    <PreferenceCategory android:title="@string/pref_how_to_contact" >
+        <EditTextPreference
+                android:title="@string/pref_your_name"
+                android:summary=""
+                android:key="prefUserName"/>
+        <EditTextPreference
+                android:title="@string/pref_your_phone_number"
+                android:summary=""
+                android:key="prefUserPhone"/>
+        <EditTextPreference
+                android:title="@string/pref_your_email"
+                android:summary=""
+                android:key="prefUserEmail"/>
+    </PreferenceCategory>
+     
+    <PreferenceCategory android:title="@string/pref_leave_message" >
+        <EditTextPreference
+            android:summary=""
+            android:title="@string/pref_your_message"
+            android:key="prefUserMessage"
+             />
+    </PreferenceCategory>
+    
+    <PreferenceCategory >
+        <Preference 
+            android:title="@string/pref_send_message"
+            android:key="prefSendMessage"/>
+    </PreferenceCategory>
+ 
+</PreferenceScreen>

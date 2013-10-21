@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+ 
+    <PreferenceCategory android:title="@string/pref_place_info" >
+        <Preference
+                android:title="@string/pref_place_name"
+                android:key="prefPlaceName"/>
+        <Preference
+                android:title="@string/pref_place_address"
+                android:key="prefPlaceAddress"/>
+        <Preference
+                android:title="@string/pref_place_phone"
+                android:key="prefPlacePhone"/>
+        <Preference
+                android:title="@string/pref_place_machines"
+                android:key="prefPlaceMachines"/>
+        <Preference
+                android:title="@string/pref_public_notes"
+                android:key="prefPublicNotes"/>
+    </PreferenceCategory>
+     
+    <PreferenceCategory android:title="@string/pref_add_a_rating" >
+        <ListPreference
+            android:key="prefRating"
+            android:entries="@array/ratings"
+            android:entryValues="@array/ratingsValues"
+            android:title="@string/pref_rating" />
+    </PreferenceCategory>
+    
+    <PreferenceCategory android:title="@string/pref_feed_back" >
+        <Preference
+                android:title="@string/pref_info_incorrect"
+                android:key="prefFeedBack"/>
+    </PreferenceCategory>
+ 
+</PreferenceScreen>

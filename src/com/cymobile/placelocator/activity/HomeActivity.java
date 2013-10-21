@@ -22,6 +22,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -38,6 +39,8 @@ public class HomeActivity extends Activity {
 	private final static String _getPlaceListURL = "http://gaminggeo.com/getPlace.php?longitude={longitude}&latitude={latitude}";
 	private double _longitude;
 	private double _latitude;
+	private static final int CURRENT_LOCATION = 1;
+	private static final int CONTACT_ADMIN = 2;
 	
 	private ListView listView;
 	Context mContext;
@@ -67,8 +70,27 @@ public class HomeActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.activity_home, menu);
+		getMenuInflater().inflate(R.menu.home_menu, menu);
 		return true;
+	}
+	
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// TODO Auto-generated method stub
+		Intent i;
+		switch (item.getItemId()) {
+
+      case R.id.menu_use_current_location:
+          //Refresh List View
+          break;
+      case R.id.menu_contact_admin:
+      	 i = new Intent(this, ContactAdminActivity.class);
+         startActivityForResult(i, CONTACT_ADMIN);
+         break;
+
+    }
+
+    return true;
 	}
 	
 	private void getPlaceList(){
