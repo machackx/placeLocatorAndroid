@@ -3,6 +3,8 @@ package com.cymobile.placelocator.adaptor;
 import java.util.ArrayList;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +15,7 @@ import android.widget.TextView;
 
 import com.cymobile.placelocator.R;
 import com.cymobile.placelocator.model.CYPlace;
+import com.google.android.gms.internal.ap;
 
 public class PlaceListAdaptor extends BaseAdapter{
 	
@@ -71,7 +74,19 @@ public class PlaceListAdaptor extends BaseAdapter{
 			viewHolder.addressTextView.setText(aPlace.getPlaceAddress());
 			float distance =  Float.valueOf(aPlace.getDistance());
 			viewHolder.distanceTextView.setText(String.format("%.2f", distance) + "M");
+			int ratingNumber = Integer.valueOf(aPlace.getRatingNumbers());
+			int rating = 0;
+			if(ratingNumber > 0) {
+				rating = Integer.valueOf(aPlace.getRating())/ratingNumber;
+			}
 			
+			if(rating > 0 && rating < 6) {
+				Bitmap ratingMap = BitmapFactory.decodeResource(_context.getResources(), R.drawable.reviews);
+				int height = (ratingMap.getHeight() + 1) / 6;
+				int width = ratingMap.getWidth();
+				Bitmap resizeMap = Bitmap.createBitmap(ratingMap, 0, rating * height, width, (ratingMap.getHeight() + 1)/12);
+				viewHolder.ratingImageView.setImageBitmap(resizeMap);
+			}
 		}
 		
 		return convertView;
