@@ -5,6 +5,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -15,8 +17,12 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Address;
+import android.location.Geocoder;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.Log;
@@ -26,7 +32,9 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.cymobile.placelocator.R;
 import com.cymobile.placelocator.adaptor.PlaceListAdaptor;
@@ -39,9 +47,8 @@ public class HomeActivity extends Activity {
 	private final static String _getPlaceListURL = "http://gaminggeo.com/getPlace.php?longitude={longitude}&latitude={latitude}";
 	private double _longitude;
 	private double _latitude;
-	private static final int CURRENT_LOCATION = 1;
+	private String placeName;
 	private static final int CONTACT_ADMIN = 2;
-	
 	private ListView listView;
 	Context mContext;
 	private ArrayList<CYPlace> placeList;
@@ -50,6 +57,39 @@ public class HomeActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
+		// set dialog
+		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+		
+		builder.setMessage("Please enter a zip code or your city name:");
+		// Set an EditText view to get user input 
+		final EditText input = new EditText(this);
+		builder.setView(input);
+		
+		builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int whichButton) {
+				placeName = input.getText().toString();
+				Geocoder geocoder = new Geocoder(HomeActivity.this, Locale.getDefault());
+				List<Address> placeList = new ArrayList<Address>();
+				try{
+					placeList = geocoder.getFromLocationName(placeName + "IL, US", 10);
+				}catch (Exception e) {
+					e.printStackTrace();
+				}
+				
+				if (placeList.size() > 0) {
+					Address placeAddress = placeList.get(0);
+					_latitude = placeAddress.getLatitude();
+					_longitude = placeAddress.getLongitude();
+					getPlaceList();
+				} else {
+					Toast.makeText(HomeActivity.this, "No places founded.", Toast.LENGTH_LONG).show();
+				}
+				
+			  }
+			});
+		AlertDialog dialog = builder.create();
+		dialog.show();
 		
 		listView = (ListView) findViewById(R.id.placeList); 
 		
@@ -64,7 +104,6 @@ public class HomeActivity extends Activity {
 			}
 		});
 		
-		getPlaceLocation();
 	}
 
 	@Override
@@ -203,13 +242,13 @@ public class HomeActivity extends Activity {
 				// TODO Auto-generated method stub
 				try{
 					String request = _getPlaceLatitudeURL;
-					request = request.replace("{address}", "freeburg");
+					request = request.replace("{address}", placeName);
 					request = request.replaceAll(" ", "%20");
 					/*
 					 * get JSON from test string
 					 */
-					//JSONObject json = getJSONFromURL(request);
-					JSONObject json =  new JSONObject(loadJSONFromAsset());
+					JSONObject json = getJSONFromURL(request);
+					//JSONObject json =  new JSONObject(loadJSONFromAsset());
 					
 					String status = json.getString("status");
 					if(status.equals("OK")){

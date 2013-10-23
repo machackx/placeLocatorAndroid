@@ -15,7 +15,6 @@ import android.widget.TextView;
 
 import com.cymobile.placelocator.R;
 import com.cymobile.placelocator.model.CYPlace;
-import com.google.android.gms.internal.ap;
 
 public class PlaceListAdaptor extends BaseAdapter{
 	
