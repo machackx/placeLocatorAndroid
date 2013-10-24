@@ -18,13 +18,18 @@ import org.json.JSONObject;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Address;
 import android.location.Geocoder;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -34,6 +39,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.cymobile.placelocator.R;
@@ -52,11 +58,24 @@ public class HomeActivity extends Activity {
 	private ListView listView;
 	Context mContext;
 	private ArrayList<CYPlace> placeList;
+	private ProgressBar progressBar;
+	private LocationListener locationListener = null;
+	private LocationManager locationManager = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
+		
+		// Set progress bar
+		progressBar= (ProgressBar) findViewById(R.id.progressBar);
+		/*
+		progressBar = new android.widget.ProgressBar(
+                HomeActivity.this,
+                null,
+                android.R.attr.progressBarStyle);
+*/
+		progressBar.getIndeterminateDrawable().setColorFilter(0xff888888, android.graphics.PorterDuff.Mode.MULTIPLY);
 		
 		// set dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
@@ -81,6 +100,7 @@ public class HomeActivity extends Activity {
 					Address placeAddress = placeList.get(0);
 					_latitude = placeAddress.getLatitude();
 					_longitude = placeAddress.getLongitude();
+					progressBar.setVisibility(View.VISIBLE);
 					getPlaceList();
 				} else {
 					Toast.makeText(HomeActivity.this, "No places founded.", Toast.LENGTH_LONG).show();
@@ -120,7 +140,17 @@ public class HomeActivity extends Activity {
 		switch (item.getItemId()) {
 
       case R.id.menu_use_current_location:
-          //Refresh List View
+          // Use GPS to get Geo coordinates
+    	  if(displayGpsStatus()) {
+    		  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+        	  locationListener = new MyLocationListener();
+        	  
+        	  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+        	  
+    	  } else {
+    		  Toast.makeText(HomeActivity.this, "Your GPS is OFF", Toast.LENGTH_LONG).show();
+    	  }
+    	  
           break;
       case R.id.menu_contact_admin:
       	 i = new Intent(this, ContactAdminActivity.class);
@@ -187,6 +217,7 @@ public class HomeActivity extends Activity {
 								LayoutInflater layoutInflator = LayoutInflater.from(mContext);
 								PlaceListAdaptor listAdaptor =  new PlaceListAdaptor(mContext, layoutInflator, placeList);
 								listView.setAdapter(listAdaptor);
+								progressBar.setVisibility(View.GONE);
 							}
 						});
 						
@@ -256,6 +287,7 @@ public class HomeActivity extends Activity {
 						JSONObject geometryResult = resultArray.getJSONObject(0).getJSONObject("geometry");
 						_latitude = geometryResult.getJSONObject("location").getDouble("lat");
 						_longitude = geometryResult.getJSONObject("location").getDouble("lng");
+						//Refresh List View
 						getPlaceList();
 					}
 					
@@ -318,6 +350,41 @@ public class HomeActivity extends Activity {
 			Log.e(TAG, "Error parsing data");
 		}
 		return jArray;
+	}
+	
+	private class MyLocationListener implements LocationListener {
+
+		@Override
+		public void onLocationChanged(Location location) {
+			// TODO Auto-generated method stub
+			_latitude = location.getLatitude();
+			_longitude = location.getLongitude();
+			getPlaceList();
+		}
+
+		@Override
+		public void onProviderDisabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onProviderEnabled(String provider) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onStatusChanged(String provider, int status, Bundle extras) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
+	private Boolean displayGpsStatus() {
+		ContentResolver contentResolver = getBaseContext().getContentResolver();
+		return Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
 	}
 
 }
