@@ -11,11 +11,14 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.json.JSONObject;
 
+import android.R.integer;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.OnSharedPreferenceChangeListener;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.ListPreference;
 import android.preference.Preference;
+import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.Preference.OnPreferenceClickListener;
 import android.preference.PreferenceActivity;
 import android.util.Log;
@@ -29,6 +32,8 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
 	private final static String TAG = "PlaceInfoActivity";
 	private final static String ERROR_REPORTING_URL_PROD = "http://gaminggeo.com/errorReporting.php?place_id=%@";
 	private CYPlace selectedPlace;
+	private int selectedValue = 0;
+	
 	@SuppressWarnings("deprecation")
 	@Override
   public void onCreate(Bundle savedInstanceState) {
@@ -51,6 +56,32 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
       
       Preference publicNotesPreference = (Preference) findPreference("prefPublicNotes");
       publicNotesPreference.setSummary(selectedPlace.getPublicComments());
+      
+      Preference ratingPreference = (Preference) findPreference("prefRating");
+      // set OnPref change listener
+      OnPreferenceChangeListener changeListener = new OnPreferenceChangeListener() {
+				
+				@Override
+				public boolean onPreferenceChange(Preference preference, Object newValue) {
+					// TODO Auto-generated method stub
+				  selectedValue = Integer.valueOf(newValue.toString());
+					return false;
+				}
+			};
+      
+      ratingPreference.setOnPreferenceChangeListener(changeListener);
+      ratingPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {
+				
+				@Override
+				public boolean onPreferenceClick(Preference preference) {
+					// TODO Auto-generated method stub
+					if (selectedValue > 0) {
+						preference.setEnabled(false);
+						Toast.makeText(PlaceInfoActivity.this, "Sorry, you have already rated this place.", Toast.LENGTH_LONG ).show();
+					} 
+					return false;
+				}
+			});
       
       Preference errorReportPreference = (Preference) findPreference("prefFeedBack");
       errorReportPreference.setOnPreferenceClickListener(new OnPreferenceClickListener() {

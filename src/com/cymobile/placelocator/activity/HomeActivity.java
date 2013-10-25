@@ -45,8 +45,11 @@ import android.widget.Toast;
 import com.cymobile.placelocator.R;
 import com.cymobile.placelocator.adaptor.PlaceListAdaptor;
 import com.cymobile.placelocator.model.CYPlace;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesClient;
+import com.google.android.gms.location.LocationClient;
 
-public class HomeActivity extends Activity {
+public class HomeActivity extends Activity  implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener{
 	
 	private final static String TAG = "HomeActivity";
 	private final static String _getPlaceLatitudeURL = "http://maps.googleapis.com/maps/api/geocode/json?address={address},IL, US&sensor=false";
@@ -61,14 +64,24 @@ public class HomeActivity extends Activity {
 	private ProgressBar progressBar;
 	private LocationListener locationListener = null;
 	private LocationManager locationManager = null;
+	private LocationClient mLocationClient = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_home);
 		
+		/*
+		// Set location manager
+		locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+	  locationListener = new MyLocationListener();
+	  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 1, locationListener);
+		*/
+		mLocationClient = new LocationClient(HomeActivity.this, this, this);
+		
 		// Set progress bar
 		progressBar= (ProgressBar) findViewById(R.id.progressBar);
+		progressBar.setVisibility(View.GONE);
 		/*
 		progressBar = new android.widget.ProgressBar(
                 HomeActivity.this,
@@ -87,6 +100,7 @@ public class HomeActivity extends Activity {
 		
 		builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int whichButton) {
+				progressBar.setVisibility(View.VISIBLE);
 				placeName = input.getText().toString();
 				Geocoder geocoder = new Geocoder(HomeActivity.this, Locale.getDefault());
 				List<Address> placeList = new ArrayList<Address>();
@@ -125,7 +139,22 @@ public class HomeActivity extends Activity {
 		});
 		
 	}
-
+	
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		super.onStart();
+		mLocationClient.connect();
+	}
+	
+	@Override
+	protected void onStop() {
+		// TODO Auto-generated method stub
+		mLocationClient.disconnect();
+		super.onStop();
+	}
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -140,17 +169,20 @@ public class HomeActivity extends Activity {
 		switch (item.getItemId()) {
 
       case R.id.menu_use_current_location:
+      	progressBar.setVisibility(View.VISIBLE);
+      	Location myCurrentLocation = mLocationClient.getLastLocation();
+      	_latitude = myCurrentLocation.getLatitude();
+  			_longitude = myCurrentLocation.getLongitude();
+  			getPlaceList();
+      	/*
           // Use GPS to get Geo coordinates
     	  if(displayGpsStatus()) {
-    		  locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        	  locationListener = new MyLocationListener();
-        	  
-        	  locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 10, locationListener);
+    		    
         	  
     	  } else {
-    		  Toast.makeText(HomeActivity.this, "Your GPS is OFF", Toast.LENGTH_LONG).show();
+    		  	Toast.makeText(HomeActivity.this, "Your GPS is OFF", Toast.LENGTH_LONG).show();
     	  }
-    	  
+    	  */
           break;
       case R.id.menu_contact_admin:
       	 i = new Intent(this, ContactAdminActivity.class);
@@ -226,6 +258,11 @@ public class HomeActivity extends Activity {
 						runOnUiThread(new Runnable() {
 							public void run() {
 								setTitle("Sorry, no place around you.");
+								mContext = getApplicationContext();
+								LayoutInflater layoutInflator = LayoutInflater.from(mContext);
+								PlaceListAdaptor listAdaptor =  new PlaceListAdaptor(mContext, layoutInflator, new ArrayList<CYPlace>());
+								listView.setAdapter(listAdaptor);
+								progressBar.setVisibility(View.GONE);
 							}
 						});
 					}
@@ -357,9 +394,7 @@ public class HomeActivity extends Activity {
 		@Override
 		public void onLocationChanged(Location location) {
 			// TODO Auto-generated method stub
-			_latitude = location.getLatitude();
-			_longitude = location.getLongitude();
-			getPlaceList();
+			
 		}
 
 		@Override
@@ -385,6 +420,24 @@ public class HomeActivity extends Activity {
 	private Boolean displayGpsStatus() {
 		ContentResolver contentResolver = getBaseContext().getContentResolver();
 		return Settings.Secure.isLocationProviderEnabled(contentResolver, LocationManager.GPS_PROVIDER);
+	}
+
+	@Override
+	public void onConnectionFailed(ConnectionResult arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onConnected(Bundle arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void onDisconnected() {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
