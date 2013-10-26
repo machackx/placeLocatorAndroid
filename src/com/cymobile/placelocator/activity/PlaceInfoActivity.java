@@ -78,6 +78,7 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
 					if (selectedValue > 0) {
 						preference.setEnabled(false);
 						Toast.makeText(PlaceInfoActivity.this, "Sorry, you have already rated this place.", Toast.LENGTH_LONG ).show();
+						// Call Web Service
 					} 
 					return false;
 				}

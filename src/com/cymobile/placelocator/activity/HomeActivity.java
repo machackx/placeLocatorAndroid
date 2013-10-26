@@ -104,21 +104,21 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
 				placeName = input.getText().toString();
 				Geocoder geocoder = new Geocoder(HomeActivity.this, Locale.getDefault());
 				List<Address> placeList = new ArrayList<Address>();
-				try{
-					placeList = geocoder.getFromLocationName(placeName + "IL, US", 10);
-				}catch (Exception e) {
-					e.printStackTrace();
-				}
+  				try{
+  					placeList = geocoder.getFromLocationName(placeName + "IL, US", 10);
+  				}catch (Exception e) {
+  					e.printStackTrace();
+  				}
 				
-				if (placeList.size() > 0) {
-					Address placeAddress = placeList.get(0);
-					_latitude = placeAddress.getLatitude();
-					_longitude = placeAddress.getLongitude();
-					progressBar.setVisibility(View.VISIBLE);
-					getPlaceList();
-				} else {
-					Toast.makeText(HomeActivity.this, "No places founded.", Toast.LENGTH_LONG).show();
-				}
+  				if (placeList.size() > 0) {
+  					Address placeAddress = placeList.get(0);
+  					_latitude = placeAddress.getLatitude();
+  					_longitude = placeAddress.getLongitude();
+  					progressBar.setVisibility(View.VISIBLE);
+  					getPlaceList();
+  				} else {
+  					Toast.makeText(HomeActivity.this, "No places founded.", Toast.LENGTH_LONG).show();
+  				}
 				
 			  }
 			});
