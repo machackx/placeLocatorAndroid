@@ -39,14 +39,23 @@
             android:value="AIzaSyAr-P1wlERv959X1yfN9b5gMpJ8hgi6fnI"/>
         
          -->
-        <activity
-            android:name="com.cymobile.placelocator.activity.HomeActivity"
+         
+         <activity
+            android:name="com.cymobile.placelocator.activity.SplashScreenActivity"
             android:label="@string/app_name" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        
+        <activity
+            android:name="com.cymobile.placelocator.activity.HomeActivity"
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan">
         </activity>
         
         <activity
