@@ -134,11 +134,11 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-				CYPlace selectedPlace = placeList.get(position);
+				CYPlace selectedPlace = placeList.get(position - 1);
 				Log.w(TAG, selectedPlace.getPlaceName());
 				
 				Intent myIntent = new Intent(HomeActivity.this, PlaceMapActivity.class);
-				myIntent.putExtra("CYPlace", placeList.get(position));
+				myIntent.putExtra("CYPlace", placeList.get(position - 1));
 				startActivity(myIntent);	
 			}
 		});

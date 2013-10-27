@@ -31,6 +31,8 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
 	
 	private final static String TAG = "PlaceInfoActivity";
 	private final static String ERROR_REPORTING_URL_PROD = "http://gaminggeo.com/errorReporting.php?place_id=%@";
+	private final static String ADD_RATING_URL_PROD = "http://gaminggeo.com/addRating.php?place_id=%@&rating={rating}";
+	private Preference ratingPreference;
 	private CYPlace selectedPlace;
 	private int selectedValue = 0;
 	
@@ -57,7 +59,7 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
       Preference publicNotesPreference = (Preference) findPreference("prefPublicNotes");
       publicNotesPreference.setSummary(selectedPlace.getPublicComments());
       
-      Preference ratingPreference = (Preference) findPreference("prefRating");
+      ratingPreference = (Preference) findPreference("prefRating");
       // set OnPref change listener
       OnPreferenceChangeListener changeListener = new OnPreferenceChangeListener() {
 				
@@ -65,6 +67,7 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
 				public boolean onPreferenceChange(Preference preference, Object newValue) {
 					// TODO Auto-generated method stub
 				  selectedValue = Integer.valueOf(newValue.toString());
+				  sendRatingInfo();
 					return false;
 				}
 			};
@@ -76,7 +79,6 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
 				public boolean onPreferenceClick(Preference preference) {
 					// TODO Auto-generated method stub
 					if (selectedValue > 0) {
-						preference.setEnabled(false);
 						Toast.makeText(PlaceInfoActivity.this, "Sorry, you have already rated this place.", Toast.LENGTH_LONG ).show();
 						// Call Web Service
 					} 
@@ -120,6 +122,38 @@ public class PlaceInfoActivity extends PreferenceActivity implements OnSharedPre
 						runOnUiThread(new Runnable() {
 							public void run() {
 								Toast.makeText(PlaceInfoActivity.this, "Thank you.  The administrator has been notified to review this entry.", Toast.LENGTH_LONG).show();
+							}
+						});
+					}
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				return null;
+			}
+			
+		};
+		task.execute();
+	}
+	
+	private void sendRatingInfo() {
+		AsyncTask<Void, Integer, Boolean> task = new AsyncTask<Void, Integer, Boolean>() {
+
+			@Override
+			protected Boolean doInBackground(Void... params) {
+				// TODO Auto-generated method stub
+				
+				try{
+					String request = ADD_RATING_URL_PROD;
+					request = request.replace("%@", selectedPlace.getPlaceId());
+					request = request.replace("{rating}", String.valueOf(selectedValue));
+					JSONObject json = getJSONFromURL(request);
+					String result = json.getString("result");
+					if(result.length() > 0){
+						runOnUiThread(new Runnable() {
+							public void run() {
+								Toast.makeText(PlaceInfoActivity.this, "Thank you, your rating has been saved.", Toast.LENGTH_LONG).show();
+								ratingPreference.setEnabled(false);
+								ratingPreference.setOnPreferenceClickListener(null);
 							}
 						});
 					}
