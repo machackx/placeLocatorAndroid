@@ -30,6 +30,7 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.format.DateUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -48,6 +49,9 @@ import com.cymobile.placelocator.model.CYPlace;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesClient;
 import com.google.android.gms.location.LocationClient;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class HomeActivity extends Activity  implements GooglePlayServicesClient.ConnectionCallbacks, GooglePlayServicesClient.OnConnectionFailedListener{
 	
@@ -58,13 +62,13 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
 	private double _latitude;
 	private String placeName;
 	private static final int CONTACT_ADMIN = 2;
-	private ListView listView;
+	private PullToRefreshListView listView;
 	Context mContext;
 	private ArrayList<CYPlace> placeList;
 	private ProgressBar progressBar;
-	private LocationListener locationListener = null;
-	private LocationManager locationManager = null;
 	private LocationClient mLocationClient = null;
+	private AlertDialog.Builder builder;
+	private AlertDialog alert;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -91,7 +95,7 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
 		progressBar.getIndeterminateDrawable().setColorFilter(0xff888888, android.graphics.PorterDuff.Mode.MULTIPLY);
 		
 		// set dialog
-		AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+		builder = new AlertDialog.Builder(HomeActivity.this);
 		
 		builder.setMessage("Please enter a zip code or your city name:");
 		// Set an EditText view to get user input 
@@ -119,13 +123,14 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
   				} else {
   					Toast.makeText(HomeActivity.this, "No places founded.", Toast.LENGTH_LONG).show();
   				}
+  				alert.dismiss();
 				
 			  }
 			});
-		AlertDialog dialog = builder.create();
-		dialog.show();
+		alert = builder.create();
+		alert.show();
 		
-		listView = (ListView) findViewById(R.id.placeList); 
+		listView = (PullToRefreshListView) findViewById(R.id.placeList); 
 		
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
@@ -137,6 +142,22 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
 				startActivity(myIntent);	
 			}
 		});
+		
+		listView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+
+			@Override
+			public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+				// TODO Auto-generated method stub
+				String label = DateUtils.formatDateTime(getApplicationContext(), System.currentTimeMillis(),
+						DateUtils.FORMAT_SHOW_TIME | DateUtils.FORMAT_SHOW_DATE | DateUtils.FORMAT_ABBREV_ALL);
+
+				// Update the LastUpdatedLabel
+				refreshView.getLoadingLayoutProxy().setLastUpdatedLabel(label);
+				new GetDataTask().execute();
+			}
+			
+		});
+		
 		
 	}
 	
@@ -438,6 +459,27 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
 	public void onDisconnected() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	private class GetDataTask extends AsyncTask<Void, Void, Boolean> {
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// Simulates a background job.
+			try {
+				Thread.sleep(0);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(Boolean result) {
+			alert.show();
+			listView.onRefreshComplete();
+			super.onPostExecute(result);
+		}
 	}
 
 }
