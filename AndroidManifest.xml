@@ -29,20 +29,25 @@
         android:icon="@drawable/ic_launcher"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
-        <meta-data
-            android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyC_sq-2HbTRr0xGLRKqrVq_ZpX1awQ0aM0"/>
         <!--  
         Office Map Key
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAr-P1wlERv959X1yfN9b5gMpJ8hgi6fnI"/>
+            android:value="AIzaSyC_sq-2HbTRr0xGLRKqrVq_ZpX1awQ0aM0"/>
+        -->
         
-         -->
+        <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyDlxtTKM3mqwdnXORY3RozgtHElOtI9vAM"/>
+        
+         
          
          <activity
             android:name="com.cymobile.placelocator.activity.SplashScreenActivity"
-            android:label="@string/app_name" >
+            android:configChanges="keyboardHidden|orientation"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustPan" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
