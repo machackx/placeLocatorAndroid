@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.cymobile.placelocator"
-    android:versionCode="1"
-    android:versionName="1.0" >
+    android:versionCode="3"
+    android:versionName="1.02" >
 
     <uses-sdk
         android:minSdkVersion="9"
@@ -35,12 +35,20 @@
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyC_sq-2HbTRr0xGLRKqrVq_ZpX1awQ0aM0"/>
         -->
-        
+        <!--  
+        HOME Map Key
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
             android:value="AIzaSyDlxtTKM3mqwdnXORY3RozgtHElOtI9vAM"/>
         
+         -->
          
+         <!--  
+        Release Map Key -->
+       
+         <meta-data
+            android:name="com.google.android.maps.v2.API_KEY"
+            android:value="AIzaSyCCepDULq3h4Mh80Ux7-c-Ioc3Fm1BKk-E"/>
          
          <activity
             android:name="com.cymobile.placelocator.activity.SplashScreenActivity"

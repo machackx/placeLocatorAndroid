@@ -258,7 +258,11 @@ public class HomeActivity extends Activity  implements GooglePlayServicesClient.
 							place.setRating(aPlace.getString("rating"));
 							place.setPaidCustomer(aPlace.getString("paid_customer"));
 							
-							placeList.add(place);
+							if(Integer.parseInt(aPlace.getString("paid_customer")) == 1 ) {
+								placeList.add(0, place);
+							}else {
+								placeList.add(place);
+							}
 						}
 						
 						

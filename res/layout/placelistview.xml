@@ -38,6 +38,7 @@
 		        <ImageView
 		            android:id="@+id/place_rating"
 		            android:layout_width="150dip"
+		            android:layout_marginLeft="10dip"
 		            android:layout_height="26dip"
 		            android:layout_gravity="center_vertical"
 		            android:scaleType="centerCrop"
