@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -70,6 +71,12 @@ public class PlaceListAdaptor extends BaseAdapter{
 		if (_placeList.get(position) != null) {
 			CYPlace aPlace = _placeList.get(position);
 			viewHolder.placeNameTextView.setText(aPlace.getPlaceName());
+			if(Integer.parseInt(aPlace.getPaidCustomer())	 == 1){
+				
+				
+				
+				viewHolder.placeNameTextView.setTypeface(Typeface.DEFAULT_BOLD);
+			}
 			viewHolder.addressTextView.setText(aPlace.getPlaceAddress());
 			float distance =  Float.valueOf(aPlace.getDistance());
 			viewHolder.distanceTextView.setText(String.format("%.2f", distance) + "M");
